@@ -1,11 +1,11 @@
 import styles from "./styles.module.css";
 import { HistoryIcon, HouseIcon, SettingsIcon, SunIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type AvaliableThemes = "dark" | "light";
 
 export function Menu() {
-  const [theme, setTheme] = useState<AvaliableThemes>("dark");
+  const [theme, setTheme] = useEffect<AvaliableThemes>("dark");
 
   function handleThemeChange(
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -19,9 +19,23 @@ export function Menu() {
       return nextTheme;
     });
 
-    document.documentElement.setAttribute("data-theme", theme);
+    //document.documentElement.setAttribute("data-theme", theme);
     //esse é um efeito colateral, o react não está monitorando isso, deveremos usar o useEffect
   }
+
+  useEffect(() => {
+    console.log("useEffect sem dependências", Date.now());
+  });
+  //executado toda vez que o componente renderiza na tela
+
+  //  useEffect(() => {
+  //  console.log("", Date.now());
+  //}, []);
+
+  //  useEffect(() => {
+  //  console.log("", Date.now());
+  //}, [theme]);
+  //useEffect com array de dependências
 
   return (
     <nav className={`${styles.menu}`}>
