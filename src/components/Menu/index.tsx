@@ -2,19 +2,30 @@ import styles from "./styles.module.css";
 import { HistoryIcon, HouseIcon, SettingsIcon, SunIcon } from "lucide-react";
 import { useState } from "react";
 
-type AvaliableThemes = 'dark' | 'light'
+type AvaliableThemes = "dark" | "light";
 
 export function Menu() {
-  const [theme, setTheme] = useState<AvaliableThemes>('dark')
+  const [theme, setTheme] = useState<AvaliableThemes>("dark");
 
   function handleThemeChange(
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) {
     event.preventDefault(); //não segue o link, não segue a ação padrão de ir para o link
+
+    console.log("Clicado", Date.now());
+
+    setTheme((prevTheme) => {
+      const nextTheme = prevTheme === "dark" ? "light" : "dark";
+      return nextTheme;
+    });
+
+    document.documentElement.setAttribute("data-theme", theme);
+    //esse é um efeito colateral, o react não está monitorando isso, deveremos usar o useEffect
   }
-  
+
   return (
     <nav className={`${styles.menu}`}>
+      <h1>{theme}</h1>
       <a className={styles.menuLink} href="#" aria-label="Home" title="Home">
         <HouseIcon />
       </a>
