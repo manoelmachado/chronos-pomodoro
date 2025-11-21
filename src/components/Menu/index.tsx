@@ -1,11 +1,26 @@
 import styles from "./styles.module.css";
-import { HistoryIcon, HouseIcon, SettingsIcon, SunIcon } from "lucide-react";
+import {
+  HistoryIcon,
+  HouseIcon,
+  SettingsIcon,
+  SunIcon,
+  MoonIcon,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 
 type AvaliableThemes = "dark" | "light";
 
 export function Menu() {
-  const [theme, setTheme] = useState<AvaliableThemes>("dark");
+  const [theme, setTheme] = useState<AvaliableThemes>(() => {
+    const storageTheme =
+      (localStorage.getItem("theme") as AvaliableThemes) || "dark";
+    return storageTheme;
+  });
+
+  const nextThemeIcon = {
+    dark: <SunIcon />,
+    light: <MoonIcon />,
+  };
 
   function handleThemeChange(
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -33,17 +48,16 @@ export function Menu() {
   useEffect(() => {
     console.log("theme mudou", theme, Date.now());
     document.documentElement.setAttribute("data-theme", theme);
-
+    localStorage.setItem("theme", theme);
     //função de cleanup para limpar o componente
-    return () => {
-      console.log("Componente atualizado!");
-    };
+    //return () => {
+    //  console.log("Componente atualizado!");
+    //};
   }, [theme]);
   //useEffect com array de dependências só vai executar a função quando o valor da dependência mudar
 
   return (
     <nav className={`${styles.menu}`}>
-      <h1>{theme}</h1>
       <a className={styles.menuLink} href="#" aria-label="Home" title="Home">
         <HouseIcon />
       </a>
@@ -73,7 +87,7 @@ export function Menu() {
         title="Alterar Tema"
         onClick={handleThemeChange}
       >
-        <SunIcon />
+        {nextThemeIcon[theme]}
       </a>
     </nav>
   );
