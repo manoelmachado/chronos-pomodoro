@@ -5,14 +5,12 @@ import { useState, useEffect } from "react";
 type AvaliableThemes = "dark" | "light";
 
 export function Menu() {
-  const [theme, setTheme] = useEffect<AvaliableThemes>("dark");
+  const [theme, setTheme] = useState<AvaliableThemes>("dark");
 
   function handleThemeChange(
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) {
     event.preventDefault(); //não segue o link, não segue a ação padrão de ir para o link
-
-    console.log("Clicado", Date.now());
 
     setTheme((prevTheme) => {
       const nextTheme = prevTheme === "dark" ? "light" : "dark";
@@ -23,19 +21,25 @@ export function Menu() {
     //esse é um efeito colateral, o react não está monitorando isso, deveremos usar o useEffect
   }
 
-  useEffect(() => {
-    console.log("useEffect sem dependências", Date.now());
-  });
+  //useEffect(() => {
+  //  console.log("useEffect sem dependências", Date.now());});
   //executado toda vez que o componente renderiza na tela
 
-  //  useEffect(() => {
-  //  console.log("", Date.now());
+  //useEffect(() => {
+  //  console.log("useEffect com array deps (dependencias) vazio", Date.now());
   //}, []);
+  //executa apenas quando o react monta o componente na tela pela primeira vez
 
-  //  useEffect(() => {
-  //  console.log("", Date.now());
-  //}, [theme]);
-  //useEffect com array de dependências
+  useEffect(() => {
+    console.log("theme mudou", theme, Date.now());
+    document.documentElement.setAttribute("data-theme", theme);
+
+    //função de cleanup para limpar o componente
+    return () => {
+      console.log("Componente atualizado!");
+    };
+  }, [theme]);
+  //useEffect com array de dependências só vai executar a função quando o valor da dependência mudar
 
   return (
     <nav className={`${styles.menu}`}>
